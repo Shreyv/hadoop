@@ -26,16 +26,16 @@ public class JoinJobRunner extends Configured implements Tool {
 			return -1;
 		}
 
-		Job job = new Job(getConf(), "Join weather records with station names");
+		Job job = new Job(getConf(), "Join roles and names");
 		job.setJarByClass(getClass());
 
-		Path ncdcInputPath = new Path(args[0]);
-		Path stationInputPath = new Path(args[1]);
+		Path namesInputPath = new Path(args[0]);
+		Path rolesInputPath = new Path(args[1]);
 		Path outputPath = new Path(args[2]);
 		DistributedCache.addCacheFile(new URI(args[3]), job.getConfiguration());
 
-		MultipleInputs.addInputPath(job, ncdcInputPath, TextInputFormat.class, JoinNamesMapper.class);
-		MultipleInputs.addInputPath(job, stationInputPath, TextInputFormat.class, JoinRolesMapper.class);
+		MultipleInputs.addInputPath(job, namesInputPath, TextInputFormat.class, JoinNamesMapper.class);
+		MultipleInputs.addInputPath(job, rolesInputPath, TextInputFormat.class, JoinRolesMapper.class);
 		FileOutputFormat.setOutputPath(job, outputPath);
 
 		job.setPartitionerClass(KeyPartitioner.class);

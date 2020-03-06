@@ -29,14 +29,16 @@ public class JoinJobRunner1 extends Configured implements Tool {
     Job job = new Job(getConf(), "Join Roles and Names");
     job.setJarByClass(getClass());
     
-    Path ncdcInputPath = new Path(args[0]);
-    Path stationInputPath = new Path(args[1]);
+    Path namesInputPath = new Path(args[0]);
+    Path rolesInputPath = new Path(args[1]);
     Path outputPath = new Path(args[2]);
+    
+    //args[3] for movies.tsv path
 	DistributedCache.addCacheFile(new URI(args[3]), job.getConfiguration());
     
-    MultipleInputs.addInputPath(job, ncdcInputPath,
+    MultipleInputs.addInputPath(job, namesInputPath,
         TextInputFormat.class, JoinNamesMapper.class);
-    MultipleInputs.addInputPath(job, stationInputPath,
+    MultipleInputs.addInputPath(job, rolesInputPath,
         TextInputFormat.class, JoinRoles1Mapper.class);
     FileOutputFormat.setOutputPath(job, outputPath);
     
