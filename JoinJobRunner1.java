@@ -11,24 +11,22 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.*;
 
-// vv JoinRecordWithStationName
 public class JoinJobRunner1 extends Configured implements Tool {
   
   public static class KeyPartitioner extends Partitioner<TextPair, Text> {
     @Override
-    public int getPartition(/*[*/TextPair key/*]*/, Text value, int numPartitions) {
-      return (/*[*/key.getFirst().hashCode()/*]*/ & Integer.MAX_VALUE) % numPartitions;
+    public int getPartition(TextPair key, Text value, int numPartitions) {
+      return (key.getFirst().hashCode() & Integer.MAX_VALUE) % numPartitions;
     }
   }
   
   @Override
   public int run(String[] args) throws Exception {
     if (args.length != 4) {
-      //JobBuilder.printUsage(this, "<ncdc input> <station input> <output>");
       return -1;
     }
     
-    Job job = new Job(getConf(), "Join weather records with station names");
+    Job job = new Job(getConf(), "Join Roles and Names");
     job.setJarByClass(getClass());
     
     Path ncdcInputPath = new Path(args[0]);
@@ -42,8 +40,8 @@ public class JoinJobRunner1 extends Configured implements Tool {
         TextInputFormat.class, JoinRoles1Mapper.class);
     FileOutputFormat.setOutputPath(job, outputPath);
     
-    /*[*/job.setPartitionerClass(KeyPartitioner.class);
-    job.setGroupingComparatorClass(TextPair.FirstComparator.class);/*]*/
+    job.setPartitionerClass(KeyPartitioner.class);
+    job.setGroupingComparatorClass(TextPair.FirstComparator.class);
     
     job.setMapOutputKeyClass(TextPair.class);
     
